@@ -1,7 +1,17 @@
-import { getCities, getCityCookie, setCookie } from "./utils/cities.js";
+import {
+  getAllCities,
+  getCities,
+  getCityCookie,
+  setCookie,
+} from "./utils/cities.js";
 
 const popularCitiesParent = document.querySelector(".main__cities-list .row");
+const searchResultCities = document.querySelector(".search-result-cities");
+const mainInput = document.querySelector(".main__input");
 
+let allCities = [];
+
+// -------------------------------------------------- choose popular city
 const cityHandler = (event, city) => {
   event.preventDefault();
 
@@ -25,7 +35,43 @@ const showPopularCities = (cities) => {
   });
 };
 
+// ---------------------------------------- show list seacrh
+
+const showListSearch = (cities) => {
+  searchResultCities.innerHTML = "";
+  cities.forEach((city) => {
+    searchResultCities.insertAdjacentHTML(
+      "beforeend",
+      `
+      <li onclick="searchHandler('${city.name}')">${city.name}</li>
+      `
+    );
+  });
+};
+
+// ------------------------------------------------------ choose city in search
+
+const searchHandler = (city) => {
+  mainInput.value = city;
+};
+
+mainInput.addEventListener("keyup", (event) => {
+  let searchesValue = event.target.value;
+
+  if (searchesValue.trim()) {
+    let filteredCities = allCities.filter((city) =>
+      city.name.startsWith(searchesValue)
+    );
+    showListSearch(filteredCities);
+  }else{
+    searchResultCities.classList.remove("active");
+  }
+});
+
+// ------------------------------------------------ bind
 window.cityHandler = cityHandler;
+window.searchHandler = searchHandler;
+
 window.addEventListener("load", async () => {
   console.log(getCityCookie());
 
@@ -36,4 +82,17 @@ window.addEventListener("load", async () => {
   const cities = await getCities();
 
   showPopularCities(cities);
+  allCities = await getAllCities();
+
+  console.log(allCities[0]);
+});
+
+// -------------------------------------------------------- search list
+mainInput.addEventListener("click", () => {
+  searchResultCities.classList.add("active");
+  showListSearch(allCities);
+});
+
+mainInput.addEventListener("blur", () => {
+  searchResultCities.classList.remove("active");
 });
