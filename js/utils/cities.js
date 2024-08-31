@@ -15,6 +15,15 @@ const getCities = async () => {
   return filteredCities;
 };
 
+// ---------------------------------- get one city
+
+const getOneCityData = async(id)=>{
+  const reqGetOneCity = await fetch(`https://divarapi.liara.run/v1/post/?city=${id}`)
+  const resOneCity = await reqGetOneCity.json()
+
+  return resOneCity
+}
+
 // ------------------------------------------------------------ cookie
 const setCookie = (city) => {
   document.cookie = `city=${city};path=/`;
@@ -58,4 +67,5 @@ export {
   getAllSocials,
   setLocalStorage,
   getLocalStorage,
+  getOneCityData
 };

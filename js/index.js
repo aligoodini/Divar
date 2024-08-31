@@ -73,12 +73,13 @@ const showListSearch = (cities) => {
 // ---------------------------------------------- show socials icon
 
 const showSocial = (data) => {
+  console.log(data[0])
   data.forEach((item) => {
     footerList.insertAdjacentHTML(
       "beforeend",
       `
           <a href="${item.link}" class="sidebar__icon-link">
-            <img width="18px" height="18px" alt="${item.name}" src="${item.icon.path}" class="sidebar__icon bi bi-twitter" />
+            <img width="18px" height="18px" alt="${item.name}" src="https://divarapi.liara.run/${item.icon.path}" class="sidebar__icon bi bi-twitter" />
           </a>
       `
     );
