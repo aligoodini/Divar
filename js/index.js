@@ -1,5 +1,6 @@
 import {
   getAllCities,
+  getAllSocials,
   getCities,
   getCityCookie,
   setCookie,
@@ -9,9 +10,9 @@ const popularCitiesParent = document.querySelector(".main__cities-list .row");
 const searchResultCities = document.querySelector(".search-result-cities .row");
 const mainInput = document.querySelector(".main__input");
 const loadingContainer = document.querySelector("#loading-container");
+const footerList = document.querySelector(".footer__list");
 
-
-console.log(loadingContainer)
+console.log(loadingContainer);
 let allCities = [];
 
 // -------------------------------------------------- choose popular city
@@ -24,7 +25,7 @@ const cityHandler = (event, city) => {
 
 // ------------------------------------------------------ show popular cities
 const showPopularCities = (cities) => {
-  loadingContainer.style.display = "none"
+  loadingContainer.style.display = "none";
   cities.forEach((city) => {
     popularCitiesParent.insertAdjacentHTML(
       "beforeend",
@@ -53,6 +54,21 @@ const showListSearch = (cities) => {
   });
 };
 
+// ---------------------------------------------- show socials icon
+
+const showSocial = (data) => {
+  data.forEach((item) => {
+    footerList.insertAdjacentHTML(
+      "beforeend",
+      `
+          <a href="${item.link}" class="sidebar__icon-link">
+            <img width="18px" height="18px" alt="${item.name}" src="${item.icon.path}" class="sidebar__icon bi bi-twitter" />
+          </a>
+      `
+    );
+  });
+  console.log(footerList)
+};
 // ------------------------------------------------------ choose city in search
 
 const searchHandler = (city) => {
@@ -81,9 +97,12 @@ window.addEventListener("load", async () => {
   //   window.location.href = `http://127.0.0.1:5500/pages/main.html?city=${getCityCookie()}`;
   // }
 
-  const cities = await getCities();
+  const socials = await getAllSocials();
+  showSocial(socials)
 
+  const cities = await getCities();
   showPopularCities(cities);
+
   allCities = await getAllCities();
 });
 
