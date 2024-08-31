@@ -7,12 +7,12 @@ import {
 } from "./utils/cities.js";
 
 const popularCitiesParent = document.querySelector(".main__cities-list .row");
-const searchResultCities = document.querySelector(".search-result-cities .row");
+const searchResultCities = document.querySelector(".search-result-cities");
+const searchResultCities2 = document.querySelector(".search-result-cities2");
 const mainInput = document.querySelector(".main__input");
 const loadingContainer = document.querySelector("#loading-container");
 const footerList = document.querySelector(".footer__list");
 
-console.log(loadingContainer);
 let allCities = [];
 
 // -------------------------------------------------- choose popular city
@@ -44,14 +44,17 @@ const showPopularCities = (cities) => {
 
 const showListSearch = (cities) => {
   searchResultCities.innerHTML = "";
-  cities.forEach((city) => {
-    searchResultCities.insertAdjacentHTML(
-      "beforeend",
-      `
-      <li onclick="searchHandler('${city.name}')">${city.name}</li>
-      `
-    );
-  });
+
+  if (cities.length) {
+    cities.forEach((city) => {
+      searchResultCities.insertAdjacentHTML(
+        "beforeend",
+        `
+        <li onclick="searchHandler('${city.name}')">${city.name}</li>
+        `
+      );
+    });
+  }
 };
 
 // ---------------------------------------------- show socials icon
@@ -67,7 +70,6 @@ const showSocial = (data) => {
       `
     );
   });
-  console.log(footerList)
 };
 // ------------------------------------------------------ choose city in search
 
@@ -77,12 +79,21 @@ const searchHandler = (city) => {
 
 mainInput.addEventListener("keyup", (event) => {
   let searchesValue = event.target.value;
+  searchResultCities.classList.add("active");
+
 
   if (searchesValue.trim()) {
     let filteredCities = allCities.filter((city) =>
       city.name.startsWith(searchesValue)
     );
-    showListSearch(filteredCities);
+    if (filteredCities.length) {
+      searchResultCities2.classList.remove("active");
+      console.log(filteredCities);
+      showListSearch(filteredCities);
+    } else {
+      searchResultCities2.classList.add("active");
+      searchResultCities.classList.remove("active");
+    }
   } else {
     searchResultCities.classList.remove("active");
   }
@@ -98,7 +109,7 @@ window.addEventListener("load", async () => {
   // }
 
   const socials = await getAllSocials();
-  showSocial(socials)
+  showSocial(socials);
 
   const cities = await getCities();
   showPopularCities(cities);
@@ -108,8 +119,10 @@ window.addEventListener("load", async () => {
 
 // -------------------------------------------------------- search list
 mainInput.addEventListener("click", () => {
-  searchResultCities.classList.add("active");
-  showListSearch(allCities);
+  if (searchResultCities) {
+    searchResultCities.classList.add("active");
+    showListSearch(allCities);
+  }
 });
 
 mainInput.addEventListener("blur", () => {

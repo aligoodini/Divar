@@ -36,7 +36,6 @@ const getAllSocials = async () => {
   const reqSocials = await fetch(`https://divarapi.liara.run/v1/social/`);
   const resArr = await reqSocials.json();
 
-  console.log(resArr.data.socials)
 
   return resArr.data.socials;
 };

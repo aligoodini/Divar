@@ -137,7 +137,7 @@ button {
   display: block;
 }
 
-.search-result-cities {
+.search-result-cities , .search-result-cities2{
   position: absolute;
   top: 100%;
   background-color: #fff;
@@ -154,8 +154,11 @@ button {
   max-height: 300px;
   overflow-y: auto;
 }
-
-.search-result-cities.active {
+.search-result-cities2{
+  justify-content: center;align-items: center;
+  height: 250px !important;
+}
+.active {
   opacity: 1;
   visibility: visible;
 }
