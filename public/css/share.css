@@ -92,8 +92,8 @@ button {
 .header {
   padding: 0.8rem 6rem;
     background-color:#fff;
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px 0px;
-    position: fixed;
+    /* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 2px 0px; */
+    /* position: fixed; */
     top: 0;
     right: 0;
     left: 0;
@@ -1012,7 +1012,7 @@ display: block !important;
 /* !=======================================Footer Style!======================================= */
 .footer {
   padding: 2rem 0;
-  margin-top: 8rem;
+  /* margin-top: 8rem; */
 }
 .footer__wrapper {
   display: flex;

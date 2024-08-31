@@ -3,7 +3,9 @@ import {
   getAllSocials,
   getCities,
   getCityCookie,
+  getLocalStorage,
   setCookie,
+  setLocalStorage,
 } from "./utils/cities.js";
 
 const popularCitiesParent = document.querySelector(".main__cities-list .row");
@@ -16,11 +18,22 @@ const footerList = document.querySelector(".footer__list");
 let allCities = [];
 
 // -------------------------------------------------- choose popular city
-const cityHandler = (event, city) => {
+const cityHandler = (event, id, city) => {
   event.preventDefault();
 
-  window.location.href = `http://127.0.0.1:5500/pages/main.html?city=${city}`;
-  setCookie(city);
+  // console.log(id, city);
+
+  const dataCity = {
+    city,
+    id,
+  };
+
+  window.location.href = `http://127.0.0.1:5500/pages/posts.html`;
+  // setCookie(city);
+
+  setLocalStorage(dataCity);
+
+  console.log(getLocalStorage());
 };
 
 // ------------------------------------------------------ show popular cities
@@ -30,9 +43,9 @@ const showPopularCities = (cities) => {
     popularCitiesParent.insertAdjacentHTML(
       "beforeend",
       `
-            <div class="col-3 d-flex justify-content-center">
+            <div class="col-3 d-flex justify-content-center" >
                 <li class="main__cities-item">
-                    <a class="main__cities-link" href="#" onClick="cityHandler(event , '${city.name}')">${city.name}</a>
+                    <a class="main__cities-link" href="" onclick="cityHandler(event , '${city.id}' , '${city.name}')">${city.name}</a>
                 </li>
             </div>
           `
@@ -50,7 +63,7 @@ const showListSearch = (cities) => {
       searchResultCities.insertAdjacentHTML(
         "beforeend",
         `
-        <li onclick="searchHandler('${city.name}')">${city.name}</li>
+        <li onclick="cityHandler('${city.name}')">${city.name}</li>
         `
       );
     });
@@ -80,7 +93,6 @@ const searchHandler = (city) => {
 mainInput.addEventListener("keyup", (event) => {
   let searchesValue = event.target.value;
   searchResultCities.classList.add("active");
-
 
   if (searchesValue.trim()) {
     let filteredCities = allCities.filter((city) =>

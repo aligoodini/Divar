@@ -15,6 +15,7 @@ const getCities = async () => {
   return filteredCities;
 };
 
+// ------------------------------------------------------------ cookie
 const setCookie = (city) => {
   document.cookie = `city=${city};path=/`;
 };
@@ -32,12 +33,29 @@ const getCityCookie = () => {
   return myCity;
 };
 
+// ------------------------------------------------------------ localStorage
+const setLocalStorage = (array) => {
+  localStorage.setItem("cities", JSON.stringify(array));
+};
+const getLocalStorage = () => {
+  const cities = localStorage.getItem("cities");
+
+  return JSON.parse(cities)
+};
+
 const getAllSocials = async () => {
   const reqSocials = await fetch(`https://divarapi.liara.run/v1/social/`);
   const resArr = await reqSocials.json();
 
-
   return resArr.data.socials;
 };
 
-export { getCities, setCookie, getCityCookie, getAllCities, getAllSocials };
+export {
+  getCities,
+  setCookie,
+  getCityCookie,
+  getAllCities,
+  getAllSocials,
+  setLocalStorage,
+  getLocalStorage,
+};
