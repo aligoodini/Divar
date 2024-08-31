@@ -6,9 +6,12 @@ import {
 } from "./utils/cities.js";
 
 const popularCitiesParent = document.querySelector(".main__cities-list .row");
-const searchResultCities = document.querySelector(".search-result-cities");
+const searchResultCities = document.querySelector(".search-result-cities .row");
 const mainInput = document.querySelector(".main__input");
+const loadingContainer = document.querySelector("#loading-container");
 
+
+console.log(loadingContainer)
 let allCities = [];
 
 // -------------------------------------------------- choose popular city
@@ -21,11 +24,12 @@ const cityHandler = (event, city) => {
 
 // ------------------------------------------------------ show popular cities
 const showPopularCities = (cities) => {
+  loadingContainer.style.display = "none"
   cities.forEach((city) => {
     popularCitiesParent.insertAdjacentHTML(
       "beforeend",
       `
-            <div class="col-2 d-flex justify-content-center">
+            <div class="col-3 d-flex justify-content-center">
                 <li class="main__cities-item">
                     <a class="main__cities-link" href="#" onClick="cityHandler(event , '${city.name}')">${city.name}</a>
                 </li>
@@ -63,7 +67,7 @@ mainInput.addEventListener("keyup", (event) => {
       city.name.startsWith(searchesValue)
     );
     showListSearch(filteredCities);
-  }else{
+  } else {
     searchResultCities.classList.remove("active");
   }
 });
@@ -73,8 +77,6 @@ window.cityHandler = cityHandler;
 window.searchHandler = searchHandler;
 
 window.addEventListener("load", async () => {
-  console.log(getCityCookie());
-
   // if (getCityCookie()) {
   //   window.location.href = `http://127.0.0.1:5500/pages/main.html?city=${getCityCookie()}`;
   // }
@@ -83,8 +85,6 @@ window.addEventListener("load", async () => {
 
   showPopularCities(cities);
   allCities = await getAllCities();
-
-  console.log(allCities[0]);
 });
 
 // -------------------------------------------------------- search list

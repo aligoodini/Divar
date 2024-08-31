@@ -1,15 +1,16 @@
 const getAllCities = async ()=>{
-  const getCities = await fetch(`http://localhost:4000/api/cities`)
+  const getCities = await fetch(`https://divarapi.liara.run/v1/location/`)
   const allCities = await getCities.json()
 
-  return allCities
+  return allCities.data.provinces
 }
 
 const getCities = async () => {
-  const citiesData = await fetch("http://localhost:4000/api/cities/popular");
+  const citiesData = await fetch("https://divarapi.liara.run/v1/location/");
   const cities = await citiesData.json();
+  let filteredCities = cities.data.cities.filter(item => item.popular == true)
 
-  return cities;
+  return filteredCities;
 };
 
 const setCookie = (city) => {
