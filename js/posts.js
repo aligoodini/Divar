@@ -14,12 +14,36 @@ window.addEventListener("load", async () => {
 
   const categories = await getCategories();
   showCategories(categories);
-});
+})
+
+// ---------------------------------------------- make time difference
+
+const makeTimeDifference = (oldTime)=>{
+
+  const newTime = new Date()
+  const createdTime = new Date(oldTime)
+
+  const DiffTime = newTime - createdTime
+
+  let mytime = null
+
+  // ---------------------------- convert to hour and day
+
+  if(DiffTime/(60*60*1000) > 24){
+    return mytime = Math.floor(DiffTime/(60*60*1000*24))+ " " + "روز پیش"
+  }else if(DiffTime/(60*60*1000) > 24){
+    return mytime =  Math.floor(DiffTime/(60*60*1000))+ " " + "ساعت پیش"
+  }else if(DiffTime/(60*60*1000) < 1){
+    return mytime = "به تازگی"
+  }
+}
+
 
 // -------------------------------------------------------------- show Adds
 const showAddvertises = (Adds) => {
   if (Adds.length) {
     Adds.forEach((Add) => {
+      const timeDifference = makeTimeDifference(Add.createdAt)
       postsContainer.insertAdjacentHTML(
         "beforeend",
         `
@@ -40,7 +64,7 @@ const showAddvertises = (Adds) => {
                                 : Add.price.toLocaleString() + " تومان"
                             }
                           </span>
-                          <span class="product-card__time">Date</span>
+                          <span class="product-card__time">${timeDifference}</span>
                         </div>
                       </div>
                       <div class="product-card__left">
