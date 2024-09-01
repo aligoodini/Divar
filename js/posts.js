@@ -127,31 +127,64 @@ const showCategories = (categories) => {
     const choosenCategory = categories.filter(
       (item) => item._id == urlCategoryId
     );
-    console.log(choosenCategory[0]);
+    // console.log(choosenCategory);
 
-    categoriesContainer.insertAdjacentHTML(
-      "beforeend",
-      `
-        <div class="all-categories">
-          <p>همه اگهی ها</p>
-          <i class="bi bi-arrow-right"></i>
-        </div>
-
-        <div class="sidebar__category-link active-category" href="#">
-          <div class="sidebar__category-link_details">
-            <i class="sidebar__category-icon bi bi-house"></i>
-            <p>${choosenCategory[0].title}</p>
+    // ---------------------------------------- subcategory level 1
+    if(choosenCategory.length){
+      categoriesContainer.insertAdjacentHTML(
+        "beforeend",
+        `
+          <div class="all-categories">
+            <p>همه اگهی ها</p>
+            <i class="bi bi-arrow-right"></i>
           </div>
-          <ul class="subCategory-list">
-            ${choosenCategory[0].subCategories
-              .map(createSubCategoryHtml)
-              .join("")}
+  
+          <div class="sidebar__category-link active-category" href="#">
+            <div class="sidebar__category-link_details">
+              <i class="sidebar__category-icon bi bi-house"></i>
+              <p>${choosenCategory[0].title}</p>
+            </div>
+            <ul class="subCategory-list">
+              ${choosenCategory[0].subCategories
+                .map(createSubCategoryHtml)
+                .join("")}
+  
+            </ul>
+          </div>
+      
+        `
+      );
+    }
+    // ---------------------------------------- subcategory level 2
+    else{
+      const choosenCategoryLevel2 = categories.flatMap(item => {
+       return item.subCategories.filter(elem => {
+          return elem._id == urlCategoryId
+        })
+      })
+      choosenCategoryLevel2.forEach((category) => {
+        categoriesContainer.insertAdjacentHTML(
+          "beforeend",
+          `
+            <div class="all-categories">
+              <p>همه اگهی ها</p>
+              <i class="bi bi-arrow-right"></i>
+            </div>
 
-          </ul>
-        </div>
-    
-      `
-    );
+            <div class="sidebar__category-link active-category" href="#">
+              <div class="sidebar__category-link_details">
+                <i class="sidebar__category-icon bi bi-house"></i>
+                <p>${category.title}</p>
+              </div>
+              <ul class="subCategory-list">
+                ${category.subCategories.map(createSubCategoryHtml).join("")}
+              </ul>
+            </div>
+        
+          `
+        );
+      });
+    }
 
     // --------------------------------------- show main categories
   } else {
@@ -173,7 +206,9 @@ const showCategories = (categories) => {
   // -------------------------------------------------------- show subcategory
   function createSubCategoryHtml (subCategory) {
     return `
-      <li class="${urlCategoryId === subCategory._id ? "active-subCategory" : ""}">
+      <li class="${urlCategoryId === subCategory._id ? "active-subCategory" : ""}"
+      onclick="categoryhandler(event , '${subCategory._id}')"
+      >
         ${subCategory.title}
       </li>
     `;
