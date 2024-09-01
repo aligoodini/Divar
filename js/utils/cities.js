@@ -17,13 +17,23 @@ const getCities = async () => {
 
 // ---------------------------------- get one city
 
-const getOneCityData = async(id)=>{
-  const reqGetOneCity = await fetch(`https://divarapi.liara.run/v1/post/?city=${id}`)
-  const resOneCity = await reqGetOneCity.json()
+const getOneCityData = async (id) => {
+  const reqGetOneCity = await fetch(
+    `https://divarapi.liara.run/v1/post/?city=${id}`
+  );
+  const resOneCity = await reqGetOneCity.json();
 
-  return resOneCity
-}
+  return resOneCity;
+};
 
+// ------------------------------------- get categories
+
+const getCategories = async () => {
+  const req = await fetch(`https://divarapi.liara.run/v1/category/`);
+  const res = await req.json();
+
+  return res.data.categories;
+};
 // ------------------------------------------------------------ cookie
 const setCookie = (city) => {
   document.cookie = `city=${city};path=/`;
@@ -49,7 +59,7 @@ const setLocalStorage = (array) => {
 const getLocalStorage = () => {
   const cities = localStorage.getItem("cities");
 
-  return JSON.parse(cities)
+  return JSON.parse(cities);
 };
 
 const getAllSocials = async () => {
@@ -67,5 +77,6 @@ export {
   getAllSocials,
   setLocalStorage,
   getLocalStorage,
-  getOneCityData
+  getOneCityData,
+  getCategories,
 };

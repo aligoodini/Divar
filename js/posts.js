@@ -1,18 +1,22 @@
-import { getLocalStorage, getOneCityData } from "./utils/cities.js";
+import {
+  getCategories,
+  getLocalStorage,
+  getOneCityData,
+} from "./utils/cities.js";
 const postsContainer = document.querySelector("#posts-container");
+const categoriesContainer = document.querySelector("#categories-container");
 let choosenCity = [];
 
 window.addEventListener("load", async () => {
   choosenCity = getLocalStorage();
-
-  console.log(choosenCity);
   const onCityData = await getOneCityData(choosenCity.id);
-
-  console.log(onCityData.data.posts);
-  console.log(onCityData.data.posts[0]);
   showAddvertises(onCityData.data.posts);
+
+  const categories = await getCategories();
+  showCategories(categories);
 });
 
+// -------------------------------------------------------------- show Adds
 const showAddvertises = (Adds) => {
   if (Adds.length) {
     Adds.forEach((Add) => {
@@ -68,3 +72,46 @@ const showAddvertises = (Adds) => {
     );
   }
 };
+
+// ------------------------------------------------------------- category url
+
+const categoryhandler = (event, Id) => {
+  console.log(Id);
+
+
+  // way 1
+  // const url = new URL(window.location.href)
+
+  // const searchParams = url.searchParams
+
+  // searchParams.set("categoryID" , Id)
+
+  // url.search = searchParams.toString()
+  // location.href = url.toString()
+
+
+  // way 2
+  const myUrl = new URL(`?categoryID=${Id}`, location.href);
+
+  location.href = myUrl;
+};
+
+// -------------------------------------------------------- show categories
+
+const showCategories = (categories) => {
+  categories.forEach((category) => {
+    categoriesContainer.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="sidebar__category-link" id="category-${category._id}" onclick="categoryhandler(event , '${category._id}')">
+        <div class="sidebar__category-link_details">
+          <i class="sidebar__category-icon bi bi-house"></i>
+          <p>${category.title}</p>
+        </div>
+      </div>
+      `
+    );
+  });
+};
+
+window.categoryhandler = categoryhandler;
