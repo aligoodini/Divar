@@ -6,7 +6,7 @@ import {
   getLocalStorage,
   setCookie,
   setLocalStorage,
-} from "./utils/cities.js";
+} from "./utils/share.js";
 
 const popularCitiesParent = document.querySelector(".main__cities-list .row");
 const searchResultCities = document.querySelector(".search-result-cities");
@@ -73,7 +73,6 @@ const showListSearch = (cities) => {
 // ---------------------------------------------- show socials icon
 
 const showSocial = (data) => {
-  console.log(data[0])
   data.forEach((item) => {
     footerList.insertAdjacentHTML(
       "beforeend",

@@ -69,6 +69,16 @@ const getAllSocials = async () => {
   return resArr.data.socials;
 };
 
+// ------------------------------------------------------- get search param
+
+const getSearchParam = (myParam)=>{
+  const searchParam = new URLSearchParams(location.search)
+
+  console.log()
+
+  return searchParam.get(myParam)
+}
+
 export {
   getCities,
   setCookie,
@@ -79,4 +89,5 @@ export {
   getLocalStorage,
   getOneCityData,
   getCategories,
+  getSearchParam
 };

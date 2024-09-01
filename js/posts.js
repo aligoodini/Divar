@@ -2,7 +2,8 @@ import {
   getCategories,
   getLocalStorage,
   getOneCityData,
-} from "./utils/cities.js";
+  getSearchParam,
+} from "./utils/share.js";
 const postsContainer = document.querySelector("#posts-container");
 const categoriesContainer = document.querySelector("#categories-container");
 let choosenCity = [];
@@ -14,36 +15,36 @@ window.addEventListener("load", async () => {
 
   const categories = await getCategories();
   showCategories(categories);
-})
+});
 
 // ---------------------------------------------- make time difference
 
-const makeTimeDifference = (oldTime)=>{
+const makeTimeDifference = (oldTime) => {
+  const newTime = new Date();
+  const createdTime = new Date(oldTime);
 
-  const newTime = new Date()
-  const createdTime = new Date(oldTime)
+  const DiffTime = newTime - createdTime;
 
-  const DiffTime = newTime - createdTime
-
-  let mytime = null
+  let mytime = null;
 
   // ---------------------------- convert to hour and day
 
-  if(DiffTime/(60*60*1000) > 24){
-    return mytime = Math.floor(DiffTime/(60*60*1000*24))+ " " + "روز پیش"
-  }else if(DiffTime/(60*60*1000) > 24){
-    return mytime =  Math.floor(DiffTime/(60*60*1000))+ " " + "ساعت پیش"
-  }else if(DiffTime/(60*60*1000) < 1){
-    return mytime = "به تازگی"
+  if (DiffTime / (60 * 60 * 1000) > 24) {
+    return (mytime =
+      Math.floor(DiffTime / (60 * 60 * 1000 * 24)) + " " + "روز پیش");
+  } else if (DiffTime / (60 * 60 * 1000) > 24) {
+    return (mytime =
+      Math.floor(DiffTime / (60 * 60 * 1000)) + " " + "ساعت پیش");
+  } else if (DiffTime / (60 * 60 * 1000) < 1) {
+    return (mytime = "به تازگی");
   }
-}
-
+};
 
 // -------------------------------------------------------------- show Adds
 const showAddvertises = (Adds) => {
   if (Adds.length) {
     Adds.forEach((Add) => {
-      const timeDifference = makeTimeDifference(Add.createdAt)
+      const timeDifference = makeTimeDifference(Add.createdAt);
       postsContainer.insertAdjacentHTML(
         "beforeend",
         `
@@ -102,7 +103,6 @@ const showAddvertises = (Adds) => {
 const categoryhandler = (event, Id) => {
   console.log(Id);
 
-
   // way 1
   // const url = new URL(window.location.href)
 
@@ -113,7 +113,6 @@ const categoryhandler = (event, Id) => {
   // url.search = searchParams.toString()
   // location.href = url.toString()
 
-
   // way 2
   const myUrl = new URL(`?categoryID=${Id}`, location.href);
 
@@ -123,19 +122,64 @@ const categoryhandler = (event, Id) => {
 // -------------------------------------------------------- show categories
 
 const showCategories = (categories) => {
-  categories.forEach((category) => {
+  const urlCategoryId = getSearchParam("categoryID");
+  if (urlCategoryId) {
+    const choosenCategory = categories.filter(
+      (item) => item._id == urlCategoryId
+    );
+    console.log(choosenCategory[0]);
+
     categoriesContainer.insertAdjacentHTML(
       "beforeend",
       `
-      <div class="sidebar__category-link" id="category-${category._id}" onclick="categoryhandler(event , '${category._id}')">
-        <div class="sidebar__category-link_details">
-          <i class="sidebar__category-icon bi bi-house"></i>
-          <p>${category.title}</p>
+        <div class="all-categories">
+          <p>همه اگهی ها</p>
+          <i class="bi bi-arrow-right"></i>
         </div>
-      </div>
+
+        <div class="sidebar__category-link active-category" href="#">
+          <div class="sidebar__category-link_details">
+            <i class="sidebar__category-icon bi bi-house"></i>
+            <p>${choosenCategory[0].title}</p>
+          </div>
+          <ul class="subCategory-list">
+            ${choosenCategory[0].subCategories
+              .map(createSubCategoryHtml)
+              .join("")}
+
+          </ul>
+        </div>
+    
       `
     );
-  });
+
+    // --------------------------------------- show main categories
+  } else {
+    categories.forEach((category) => {
+      categoriesContainer.insertAdjacentHTML(
+        "beforeend",
+        `
+        <div class="sidebar__category-link" id="category-${category._id}" onclick="categoryhandler(event , '${category._id}')">
+          <div class="sidebar__category-link_details">
+            <i class="sidebar__category-icon bi bi-house"></i>
+            <p>${category.title}</p>
+          </div>
+        </div>
+        `
+      );
+    });
+  }
+
+  // -------------------------------------------------------- show subcategory
+  function createSubCategoryHtml (subCategory) {
+    return `
+      <li class="${urlCategoryId === subCategory._id ? "active-subCategory" : ""}">
+        ${subCategory.title}
+      </li>
+    `;
+  };
 };
+
+
 
 window.categoryhandler = categoryhandler;
