@@ -119,6 +119,14 @@ const categoryhandler = (event, Id) => {
   location.href = myUrl;
 };
 
+// ------------------------------------------------------------- back button
+
+const backHandler = (e)=>{
+
+  location.href = "/pages/posts.html"
+}
+
+
 // -------------------------------------------------------- show categories
 
 const showCategories = (categories) => {
@@ -134,7 +142,7 @@ const showCategories = (categories) => {
       categoriesContainer.insertAdjacentHTML(
         "beforeend",
         `
-          <div class="all-categories">
+          <div class="all-categories" onclick="backHandler(event)">
             <p>همه اگهی ها</p>
             <i class="bi bi-arrow-right"></i>
           </div>
@@ -166,7 +174,7 @@ const showCategories = (categories) => {
         categoriesContainer.insertAdjacentHTML(
           "beforeend",
           `
-            <div class="all-categories">
+            <div class="all-categories" onclick="backHandler(event)">
               <p>همه اگهی ها</p>
               <i class="bi bi-arrow-right"></i>
             </div>
@@ -218,3 +226,4 @@ const showCategories = (categories) => {
 
 
 window.categoryhandler = categoryhandler;
+window.backHandler = backHandler
