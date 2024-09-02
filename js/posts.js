@@ -126,7 +126,6 @@ const backHandler = (e)=>{
   location.href = "/pages/posts.html"
 }
 
-
 // -------------------------------------------------------- show categories
 
 const showCategories = (categories) => {
@@ -222,7 +221,6 @@ const showCategories = (categories) => {
     `;
   };
 };
-
 
 
 window.categoryhandler = categoryhandler;

@@ -1,3 +1,8 @@
+const globalSearchInput = document.querySelector("#global_search_input");
+const removeSearchValueIcon = document.querySelector(
+  "#remove-search-value-icon"
+);
+
 const getAllCities = async () => {
   const getCities = await fetch(`https://divarapi.liara.run/v1/location/`);
   const allCities = await getCities.json();
@@ -71,13 +76,38 @@ const getAllSocials = async () => {
 
 // ------------------------------------------------------- get search param
 
-const getSearchParam = (myParam)=>{
-  const searchParam = new URLSearchParams(location.search)
+const getSearchParam = (myParam) => {
+  const searchParam = new URLSearchParams(location.search);
 
-  console.log()
+  console.log();
 
-  return searchParam.get(myParam)
+  return searchParam.get(myParam);
+};
+
+// ---------------------------------------------------------- search
+
+globalSearchInput.addEventListener("keyup", (e) => {
+  e.preventDefault()
+  if (e.key == "Enter") {
+    if (e.target.value.trim()) {
+      const Myurl = new URL(`?q=${e.target.value.trim()}`, location.href);
+
+      location.href = Myurl;
+
+      // location.href = `http://127.0.0.1:5500/pages/posts.html?q=${e.target.value.trim()}`
+    }
+  }
+});
+
+if (getSearchParam("q")) {
+  console.log(location.href);
+  globalSearchInput.value = getSearchParam("q");
+  removeSearchValueIcon.style.display = "block";
 }
+
+removeSearchValueIcon.addEventListener("click", () => {
+  location.href = `http://127.0.0.1:5500/pages/posts.html`
+});
 
 export {
   getCities,
@@ -89,5 +119,5 @@ export {
   getLocalStorage,
   getOneCityData,
   getCategories,
-  getSearchParam
+  getSearchParam,
 };
