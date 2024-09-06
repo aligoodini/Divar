@@ -161,99 +161,149 @@ const showCategories = (categories) => {
       
         `
       );
-    }
-    // ---------------------------------------- subcategory level 2
-    else {
+    } else {
       const choosenCategoryLevel2 = categories.flatMap((item) => {
         return item.subCategories.filter((elem) => {
           return elem._id == urlCategoryId;
         });
       });
-      choosenCategoryLevel2.forEach((category) => {
-        categoriesContainer.insertAdjacentHTML(
-          "beforeend",
-          `
-            <div class="all-categories" onclick="backHandler(event)">
-              <p>همه اگهی ها</p>
-              <i class="bi bi-arrow-right"></i>
-            </div>
 
-            <div class="sidebar__category-link active-category" href="#">
-              <div class="sidebar__category-link_details">
-                <i class="sidebar__category-icon bi bi-house"></i>
-                <p>${category.title}</p>
-              </div>
-              <ul class="subCategory-list">
-                ${category.subCategories.map(createSubCategoryHtml).join("")}
-              </ul>
-            </div>
-        
-          `
-        );
-      });
-
-      // ---------------------------------------- filters for subcategory level 2
-      choosenCategoryLevel2[0].filters?.map((item) => {
-        console.log(item);
-        sidebarFilters.insertAdjacentHTML(
-          "afterbegin",
-          `
-               ${
-                 item.type === "selectbox"
-                   ? `
-                <div class="accordion accordion-flush" id="accordionFlushExample">
-                  <div class="accordion-item">
-                    <h2 class="accordion-header">
-                      <button
-                        class="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#accordion-${item.slug}"
-                        aria-expanded="false"
-                        aria-controls="accordion-${item.name}"
+      const showFilterFunc = (array) => {
+        console.log(array);
+        // ---------------------------------------- filters for subcategory level 2
+        array.filters?.map((item) => {
+          sidebarFilters.insertAdjacentHTML(
+            "afterbegin",
+            `
+                 ${
+                   item.type === "selectbox"
+                     ? `
+                  <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
+                        <button
+                          class="accordion-button collapsed"
+                          type="button"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#accordion-${item.slug}"
+                          aria-expanded="false"
+                          aria-controls="accordion-${item.name}"
+                        >
+                          <span class="sidebar__filter-title">${
+                            item.name
+                          }</span>
+                        </button>
+                      </h2>
+                      <div
+                        id="accordion-${item.slug}"
+                        class="accordion-collapse collapse"
+                        aria-labelledby="accordion-${item.name}"
+                        data-bs-parent="#accordionFlushExample"
                       >
-                        <span class="sidebar__filter-title">${item.name}</span>
-                      </button>
-                    </h2>
-                    <div
-                      id="accordion-${item.slug}"
-                      class="accordion-collapse collapse"
-                      aria-labelledby="accordion-${item.name}"
-                      data-bs-parent="#accordionFlushExample"
-                    >
-                      <div class="accordion-body">
-                        <select class="selectbox">
-                          ${item.options
-                            .sort((a, b) => b - a)
-                            .map(
-                              (option) =>
-                                `<option value='${option}'>${option}</option>`
-                            )}
-                        </select>
+                        <div class="accordion-body">
+                          <select class="selectbox">
+                            ${item.options
+                              .sort((a, b) => b - a)
+                              .map(
+                                (option) =>
+                                  `<option value='${option}'>${option}</option>`
+                              )}
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              `
-                   : ""
-               }
+                `
+                     : ""
+                 }
 
-               ${
-                 item.type === "checkbox"
-                   ? `
-                      <div class="sidebar__filter">
-                        <label class="switch">
-                          <input id="exchange_controll" class="icon-controll" type="checkbox" />
-                          <span class="slider round"></span>
-                        </label>
-                        <p>${item.name}</p>
-                      </div>
-                    `
-                   : ""
-               }
+                 ${
+                   item.type === "checkbox"
+                     ? `
+                        <div class="sidebar__filter">
+                          <label class="switch">
+                            <input id="exchange_controll" class="icon-controll" type="checkbox" />
+                            <span class="slider round"></span>
+                          </label>
+                          <p>${item.name}</p>
+                        </div>
+                      `
+                     : ""
+                 }
+              `
+          );
+        });
+      };
+
+      // ---------------------------------------- subcategory level 2
+      if (choosenCategoryLevel2.length) {
+        choosenCategoryLevel2.forEach((category) => {
+          categoriesContainer.insertAdjacentHTML(
+            "beforeend",
             `
-        );
-      });
+              <div class="all-categories" onclick="backHandler(event)">
+                <p>همه اگهی ها</p>
+                <i class="bi bi-arrow-right"></i>
+              </div>
+  
+              <div class="sidebar__category-link active-category" href="#">
+                <div class="sidebar__category-link_details">
+                  <i class="sidebar__category-icon bi bi-house"></i>
+                  <p>${category.title}</p>
+                </div>
+                <ul class="subCategory-list">
+                  ${category.subCategories.map(createSubCategoryHtml).join("")}
+                </ul>
+              </div>
+          
+            `
+          );
+        });
+
+        showFilterFunc(choosenCategoryLevel2[0]);
+      }
+      // ---------------------------------------- subcategory level 3
+      else {
+        const choosenCategoryLevel3 = categories.flatMap((item) => {
+          return item.subCategories.flatMap((elem) => {
+            return elem.subCategories.filter((sscate) => {
+              return sscate._id == urlCategoryId;
+            });
+          });
+        });
+        const choosenCategoryLevel3Parent = categories.flatMap((item) => {
+          return item.subCategories.filter((elem) => {
+            return elem._id == choosenCategoryLevel3[0].parent;
+          });
+        });
+
+        choosenCategoryLevel3Parent.forEach((category) => {
+          categoriesContainer.insertAdjacentHTML(
+            "beforeend",
+            `
+              <div class="all-categories" onclick="backHandler(event)">
+                <p>همه اگهی ها</p>
+                <i class="bi bi-arrow-right"></i>
+              </div>
+
+              <div class="sidebar__category-link active-category" href="#">
+                <div class="sidebar__category-link_details">
+                  <i class="sidebar__category-icon bi bi-house"></i>
+                  <p>${category.title}</p>
+                </div>
+                <ul class="subCategory-list">
+                  ${category.subCategories.map(createSubCategoryHtml).join("")}
+                </ul>
+              </div>
+          
+            `
+          );
+        });
+
+        // ---------------------------------------- filters for subcategory level 2
+
+        showFilterFunc(choosenCategoryLevel3[0]);
+      }
     }
 
     // --------------------------------------- show main categories
