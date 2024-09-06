@@ -86,7 +86,7 @@ const getSearchParam = (myParam) => {
 
 // ---------------------------------------------------------- search
 
-globalSearchInput.addEventListener("keyup", (e) => {
+globalSearchInput?.addEventListener("keyup", (e) => {
   e.preventDefault()
   if (e.key == "Enter") {
     if (e.target.value.trim()) {
@@ -105,7 +105,7 @@ if (getSearchParam("q")) {
   removeSearchValueIcon.style.display = "block";
 }
 
-removeSearchValueIcon.addEventListener("click", () => {
+removeSearchValueIcon?.addEventListener("click", () => {
   location.href = `http://127.0.0.1:5500/pages/posts.html`
 });
 

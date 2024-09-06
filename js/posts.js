@@ -6,6 +6,7 @@ import {
 } from "./utils/share.js";
 const postsContainer = document.querySelector("#posts-container");
 const categoriesContainer = document.querySelector("#categories-container");
+const sidebarFilters = document.querySelector("#sidebar-filters");
 let choosenCity = [];
 
 window.addEventListener("load", async () => {
@@ -121,10 +122,9 @@ const categoryhandler = (event, Id) => {
 
 // ------------------------------------------------------------- back button
 
-const backHandler = (e)=>{
-
-  location.href = "/pages/posts.html"
-}
+const backHandler = (e) => {
+  location.href = "/pages/posts.html";
+};
 
 // -------------------------------------------------------- show categories
 
@@ -137,7 +137,7 @@ const showCategories = (categories) => {
     // console.log(choosenCategory);
 
     // ---------------------------------------- subcategory level 1
-    if(choosenCategory.length){
+    if (choosenCategory.length) {
       categoriesContainer.insertAdjacentHTML(
         "beforeend",
         `
@@ -163,12 +163,12 @@ const showCategories = (categories) => {
       );
     }
     // ---------------------------------------- subcategory level 2
-    else{
-      const choosenCategoryLevel2 = categories.flatMap(item => {
-       return item.subCategories.filter(elem => {
-          return elem._id == urlCategoryId
-        })
-      })
+    else {
+      const choosenCategoryLevel2 = categories.flatMap((item) => {
+        return item.subCategories.filter((elem) => {
+          return elem._id == urlCategoryId;
+        });
+      });
       choosenCategoryLevel2.forEach((category) => {
         categoriesContainer.insertAdjacentHTML(
           "beforeend",
@@ -191,6 +191,69 @@ const showCategories = (categories) => {
           `
         );
       });
+
+      // ---------------------------------------- filters for subcategory level 2
+      choosenCategoryLevel2[0].filters?.map((item) => {
+        console.log(item);
+        sidebarFilters.insertAdjacentHTML(
+          "afterbegin",
+          `
+               ${
+                 item.type === "selectbox"
+                   ? `
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordion-${item.slug}"
+                        aria-expanded="false"
+                        aria-controls="accordion-${item.name}"
+                      >
+                        <span class="sidebar__filter-title">${item.name}</span>
+                      </button>
+                    </h2>
+                    <div
+                      id="accordion-${item.slug}"
+                      class="accordion-collapse collapse"
+                      aria-labelledby="accordion-${item.name}"
+                      data-bs-parent="#accordionFlushExample"
+                    >
+                      <div class="accordion-body">
+                        <select class="selectbox">
+                          ${item.options
+                            .sort((a, b) => b - a)
+                            .map(
+                              (option) =>
+                                `<option value='${option}'>${option}</option>`
+                            )}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `
+                   : ""
+               }
+
+               ${
+                 item.type === "checkbox"
+                   ? `
+                      <div class="sidebar__filter">
+                        <label class="switch">
+                          <input id="exchange_controll" class="icon-controll" type="checkbox" />
+                          <span class="slider round"></span>
+                        </label>
+                        <p>${item.name}</p>
+                      </div>
+                    `
+                   : ""
+               }
+            `
+        );
+      });
     }
 
     // --------------------------------------- show main categories
@@ -211,17 +274,18 @@ const showCategories = (categories) => {
   }
 
   // -------------------------------------------------------- show subcategory
-  function createSubCategoryHtml (subCategory) {
+  function createSubCategoryHtml(subCategory) {
     return `
-      <li class="${urlCategoryId === subCategory._id ? "active-subCategory" : ""}"
+      <li class="${
+        urlCategoryId === subCategory._id ? "active-subCategory" : ""
+      }"
       onclick="categoryhandler(event , '${subCategory._id}')"
       >
         ${subCategory.title}
       </li>
     `;
-  };
+  }
 };
 
-
 window.categoryhandler = categoryhandler;
-window.backHandler = backHandler
+window.backHandler = backHandler;
