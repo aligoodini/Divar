@@ -23,19 +23,19 @@ const getCities = async () => {
 // ---------------------------------- get one city
 
 const getOneCityData = async (id) => {
-  let reqGetOneCity = null;
+  let url = `https://divarapi.liara.run/v1/post/?city=${id}`;
   if (getSearchParam("categoryID")) {
-    reqGetOneCity = await fetch(
-      `https://divarapi.liara.run/v1/post/?city=${id}&categoryId=${getSearchParam(
-        "categoryID"
-      )}`
-    );
-  } else {
-    reqGetOneCity = await fetch(
-      `https://divarapi.liara.run/v1/post/?city=${id}`
-    );
+    url += `&categoryId=${getSearchParam("categoryID")}`;
   }
+  if (getSearchParam("q")) {
+    url += `&search=${getSearchParam("q")}`;
+  }
+
+  // console.log(url)
+  const reqGetOneCity = await fetch(url);
   const resOneCity = await reqGetOneCity.json();
+
+  // console.log(resOneCity)
 
   return resOneCity;
 };
@@ -83,12 +83,25 @@ const getAllSocials = async () => {
   return resArr.data.socials;
 };
 
+// ------------------------------------------------------- remove search param
+
+const removeSearchParam = (myParam) => {
+  const url = new URL(location.href);
+
+  const params = new URLSearchParams(url.search);
+
+  console.log(params);
+  params.delete(myParam);
+
+  url.search = params.toString();
+
+  location.href = url.toString();
+};
+
 // ------------------------------------------------------- get search param
 
 const getSearchParam = (myParam) => {
   const searchParam = new URLSearchParams(location.search);
-
-  console.log();
 
   return searchParam.get(myParam);
 };
@@ -97,11 +110,13 @@ const getSearchParam = (myParam) => {
 
 globalSearchInput?.addEventListener("keyup", (e) => {
   e.preventDefault();
+  console.log(location.href);
   if (e.key == "Enter") {
     if (e.target.value.trim()) {
-      const Myurl = new URL(`?q=${e.target.value.trim()}`, location.href);
+      // const Myurl = new URL(`?q=${e.target.value.trim()}`, location.href);
 
-      location.href = Myurl;
+      // location.href = Myurl;
+      location.href = location.href + `&q=${e.target.value.trim()}`;
 
       // location.href = `http://127.0.0.1:5500/pages/posts.html?q=${e.target.value.trim()}`
     }
@@ -109,13 +124,12 @@ globalSearchInput?.addEventListener("keyup", (e) => {
 });
 
 if (getSearchParam("q")) {
-  console.log(location.href);
   globalSearchInput.value = getSearchParam("q");
   removeSearchValueIcon.style.display = "block";
 }
 
 removeSearchValueIcon?.addEventListener("click", () => {
-  location.href = `http://127.0.0.1:5500/pages/posts.html`;
+  removeSearchParam("q");
 });
 
 export {
