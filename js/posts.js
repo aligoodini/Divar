@@ -7,6 +7,7 @@ import {
 const postsContainer = document.querySelector("#posts-container");
 const categoriesContainer = document.querySelector("#categories-container");
 const sidebarFilters = document.querySelector("#sidebar-filters");
+
 let choosenCity = [];
 
 window.addEventListener("load", async () => {

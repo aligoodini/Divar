@@ -1,4 +1,8 @@
 const globalSearchInput = document.querySelector("#global_search_input");
+const headerSearchbarDropdown = document.querySelector(
+  ".header__searchbar-dropdown"
+);
+const mostSearchedElem = document.querySelector("#most_searched");
 const removeSearchValueIcon = document.querySelector(
   "#remove-search-value-icon"
 );
@@ -90,7 +94,6 @@ const removeSearchParam = (myParam) => {
 
   const params = new URLSearchParams(url.search);
 
-  console.log(params);
   params.delete(myParam);
 
   url.search = params.toString();
@@ -110,17 +113,56 @@ const getSearchParam = (myParam) => {
 
 globalSearchInput?.addEventListener("keyup", (e) => {
   e.preventDefault();
-  console.log(location.href);
   if (e.key == "Enter") {
     if (e.target.value.trim()) {
       // const Myurl = new URL(`?q=${e.target.value.trim()}`, location.href);
 
       // location.href = Myurl;
-      location.href = location.href + `&q=${e.target.value.trim()}`;
+
+      if (getSearchParam("categoryID")) {
+        location.href = location.href + `&q=${e.target.value.trim()}`;
+      } else {
+        location.href = location.href + `?q=${e.target.value.trim()}`;
+      }
 
       // location.href = `http://127.0.0.1:5500/pages/posts.html?q=${e.target.value.trim()}`
     }
   }
+});
+
+const mostSearchedWords = ["پراید", "ساعت", "انگشتر", "تبلت", "ساعت"];
+mostSearchedWords.forEach((item) => {
+  // ---------------------------------------- most search shown in category
+  // ---------------------------------but i perfer most search in all categories
+  // let myUrl = location.href
+  // if(getSearchParam("categoryID")){
+  //   myUrl += `&q=${item}`
+  // }else{
+  //   myUrl += `?q=${item}`
+  // }
+
+  mostSearchedElem?.insertAdjacentHTML(
+    "beforeend",
+    `
+    
+      <li class="header__searchbar-dropdown-item">
+        <a href="posts.html?q=${item}" class="header__searchbar-dropdown-link">
+            ${item}
+        </a>
+      </li>
+    `
+  );
+});
+// ------------------------------------------------------ show most search
+globalSearchInput?.addEventListener("click", () => {
+  headerSearchbarDropdown.classList.add("header__searchbar-dropdown--active");
+});
+
+// ------------------------------------------------------ remove most search
+globalSearchInput?.addEventListener("blur", () => {
+  headerSearchbarDropdown.classList.remove(
+    "header__searchbar-dropdown--active"
+  );
 });
 
 if (getSearchParam("q")) {
