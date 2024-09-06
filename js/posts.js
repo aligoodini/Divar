@@ -169,7 +169,6 @@ const showCategories = (categories) => {
       });
 
       const showFilterFunc = (array) => {
-        console.log(array);
         // ---------------------------------------- filters for subcategory level 2
         array.filters?.map((item) => {
           sidebarFilters.insertAdjacentHTML(
@@ -287,7 +286,9 @@ const showCategories = (categories) => {
               </div>
 
               <div class="sidebar__category-link active-category" href="#">
-                <div class="sidebar__category-link_details">
+                <div class="sidebar__category-link_details" onclick="categoryhandler(event , '${
+                  category._id
+                }')">
                   <i class="sidebar__category-icon bi bi-house"></i>
                   <p>${category.title}</p>
                 </div>

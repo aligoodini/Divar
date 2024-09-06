@@ -23,9 +23,18 @@ const getCities = async () => {
 // ---------------------------------- get one city
 
 const getOneCityData = async (id) => {
-  const reqGetOneCity = await fetch(
-    `https://divarapi.liara.run/v1/post/?city=${id}`
-  );
+  let reqGetOneCity = null;
+  if (getSearchParam("categoryID")) {
+    reqGetOneCity = await fetch(
+      `https://divarapi.liara.run/v1/post/?city=${id}&categoryId=${getSearchParam(
+        "categoryID"
+      )}`
+    );
+  } else {
+    reqGetOneCity = await fetch(
+      `https://divarapi.liara.run/v1/post/?city=${id}`
+    );
+  }
   const resOneCity = await reqGetOneCity.json();
 
   return resOneCity;
@@ -87,7 +96,7 @@ const getSearchParam = (myParam) => {
 // ---------------------------------------------------------- search
 
 globalSearchInput?.addEventListener("keyup", (e) => {
-  e.preventDefault()
+  e.preventDefault();
   if (e.key == "Enter") {
     if (e.target.value.trim()) {
       const Myurl = new URL(`?q=${e.target.value.trim()}`, location.href);
@@ -106,7 +115,7 @@ if (getSearchParam("q")) {
 }
 
 removeSearchValueIcon?.addEventListener("click", () => {
-  location.href = `http://127.0.0.1:5500/pages/posts.html`
+  location.href = `http://127.0.0.1:5500/pages/posts.html`;
 });
 
 export {
